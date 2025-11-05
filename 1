@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>朗读练习 - 30秒倒计时</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background-color: #f5f7fa;
+      text-align: center;
+      padding: 40px;
+    }
+    #passage {
+      font-size: 1.4em;
+      line-height: 1.6;
+      margin: 30px auto;
+      max-width: 800px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #timer {
+      font-size: 2em;
+      color: #e74c3c;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 朗读练习（30秒）</h1>
+  <div id="passage">点击“开始练习”抽取段落</div>
+  <div id="timer">30</div>
+  <button onclick="startReading()">开始练习</button>
+
+  <script>
+    const passages = [
+      "Increasingly, the one that draws the world’s attention is not the factory-and-warehouse aspect of China, but the new innovation-driven China that is poised to reshape the future of global technology, with growing strength in fields ranging from artificial intelligence to drones. The international community describes China’s great development and achievements as “miracles.”",
+      "However, China has accomplished a remarkable feat in transforming itself from a low-cost manufacturing economy to a higher-value, innovation-led one, in only a few decades. According to the Global Innovation Index 2021 released by the World Intellectual Property Organization, China ranks 12th, moving up two places from 14th in 2020, and maintaining momentum for nine consecutive years.",
+      "After years of hard work, China is now leading the world in the field of aerospace technology, high-speed railways, 5G-enabled technologies, artificial intelligence, and deep-sea exploration. In the long term, some of these innovations might have profound effects on the economy and industry, pretty much like how the invention of electricity and computers changed human life.",
+      "“What Silicon Valley has done is impressive, but now I see the most potential in China,” said one executive. The world celebrates Silicon Valley as a center of innovation, but many Chinese executives, particularly from China’s growing technology sector, feel increasingly convinced that they can compete head-to-head, engineer by engineer, with the best in Silicon Valley or other innovation hubs.",
+      "They were the first generation to experience the benefits of China’s reform and opening-up, which began in 1978. Unlike their parents, who lived through hardship and poverty, they have never experienced an economic downturn. In fact, China’s average GDP growth was nearly 10 percent per annul from 1979 to 2010. Born and raised as the country’s wealth was rapidly growing, they thus benefited enormously from economic and social reforms.",
+      "Born as digital natives with information at their fingertips, these youngsters are more sophisticated, have exposure to international cultures and ideas, and enjoy a modern healthy lifestyle. They tend to be more individualistic, entrepreneurial, and confident. Young people born after 1990 tend to change jobs frequently, with more than 60 percent of them staying less than a year in their first job.",
+      "The French, for instance, cannot get the hang of queuing. They try and try, but it is beyond them. Wherever you go in Paris, you see orderly lines waiting at bus stops, but as soon as the bus pulls up, everyone scrambles to be the first aboard, quite unaware that this defeats the whole purpose of queuing.",
+      "To my continuing amazement, many of the British also turn their fork upside down and balance the food on the back of it. I’ve lived in England for over a decade and I still have to fight an impulse to go up to strangers in pubs and restaurants and say, “Excuse me, can I give you a tip that’ll help stop those peas bouncing all over the table?”",
+      "But that’s the great thing of foreign travel. I can’t think of anything that excites a greater sense of childlike wonder than to be in a country where you are ignorant of almost everything. Suddenly you are five years old again. You can’t read anything. You can’t even reliably cross a street without endangering your life. Your whole existence becomes a series of interesting guesses.",
+      "Whenever I look through all those files of things I've saved over the years, I usually stumble upon some long-forgotten newspaper article I have tucked away. I give it a casual glance, turn it over, then always find that whatever’s on the back is more interesting. Serendipity seems to win out over planning every time. And travel is just like that.",
+      "Most people take photos when they travel, but not everyone jots down drawings and descriptions in a journal. I've filled 30-some notebooks with a decade's worth of lost travel moments. Lately I've been reading each of them, page by page. It's been amazing. I enjoy the unfiltered lines: scribbles about train times, sketches of a bus driver's dramatic mustache, ideas for songs I'll never write.",
+      "Last October, I traveled to south-central France to follow in the footsteps Robert Louis Stevenson took in one of his books. When I came to a small lake, I knew I was near the spot where Stevenson had offered what would become one of the book’s enduring quotations: “I travel for travel’s sake. The great affair is to move.”",
+      "I miss the way you challenge me. Every Day. Pushing me farther and faster, you encourage me to go past the limits and expectations I set for myself — miles and miles past them. And I miss the confidence you give me — you don’t just know my body; you understand and appreciate it: the sweat-dripping, heart-pounding, breathtaking times we share, then the fulfillment I get as we finish happily together.",
+      "All my weaknesses, celebrations, highs and lows, you’ve experienced them right alongside me. My mom’s cancer? You were my cure. My dad’s alcohol addiction? You were my distraction. School, jobs, travel, relationships, family — in every stage of my life, you’ve been my escape, and I’ve taken comfort in your company. But never mind the negatives, we’ve seen beautiful things together. Sunrises, beaches, mountains — you name it, we’ve run it.",
+      "Now, I find myself fighting to forget our past. I’m trying hard not to need you because I know you can’t be there for me forever, and I won’t always be able to give you what you need. I will age. My body will weaken. While it scares me to admit, our time together will, for lack of better words … run out.",
+      "And I’m excited by the prospect of taking each hill, each curve, each hurdle, one step at a time, one foot in front of the other, just like we’ve always done. Because I’m not ready for a negative split. Not yet. I can’t ask you to change — I know you never will — so I’ll continue to give you my best, all of me.",
+      "After the US survived two world wars and the economic fragility they caused, leisure became more accessible for the American middle class. With economic recovery and technological development, corporations were able to offer structured workweeks, job security, higher pay, and paid vacations, and also let their employees go home at 5 p.m. From disposable income a leisure industry was born — and welcomed by 60 million people.",
+      "Hobbies were something a majority of people could enjoy, while the side hustle is more common among the middle class. And even those who enjoy leisure careers might be better to take a break from being productive. That’s tough when we’re being conditioned to love our jobs. But perhaps we can copy the post-war pattern regarding boundaries between leisure and work.",
+      "But after so many hundreds of thousands of years of living as hunter-gatherers, it’s no surprise that hunting and gathering are still instinctive to us. And this brings us back to shopping — because these instincts may show themselves in our shopping habits. When most women shop, they are in more of a “gathering” mode — browsing from tree to tree, looking for ripe and nutritious fruits.",
+      "Of course, it’s a generalization to say, “Women like shopping and men don’t”. However, there is evidence that this isn’t a complete myth. A survey of 2,000 British people found that men became bored after only 26 minutes of shopping, while it took women a full two hours. The survey found that 80 percent of men didn’t like shopping with their partners, and that 45 percent avoided doing so at all costs.",
+      "More seriously, this might also help us to overcome the impulse to buy unnecessary material goods. Once you become aware of the reasons for a behavior, it becomes easier to control and overcome it. I’m not saying that we should stop shopping, but perhaps we should shop in a more sensible way and bring our buying more in line with our needs than our desires.",
+      "Book reviewers are three or four times more likely to use words like “husband,” “marriage,” and “mother” to describe books written by women between 2000 and 2009, and nearly twice as likely to use words like “love,” “beauty,” and “children.” However, when describing books written by men, reviewers are twice as likely to use words like “president” and “leader,” as well as “argument” and “theory.”",
+      "In 2014, it was reported that the book reviews in these periodicals were down to a 14 percent bias toward men, and this was regarded as a sign of improvement. But things are, in many significant ways, not getting better at all. Although more women writers are now discussed in book reviews, the way they are talked about in the press has not changed.",
+      "Since the early 2000s, gender inequality in the culture industry — literature, music, and film — has gained much attention. In the world of writing, gender bias has come to be seen as particularly strong. In 2010, the results of a study showed that men appeared 60 percent more often in some of the most book review periodicals. This number is valuable.",
+      "Ultimately, what's at stake in these findings is not simply the question of how to reduce gender inequality in the world of letters, but also how we imagine and recognize such change. Quantitative changes in gender representation are not trivial and they provide a noticeable sense of improvement: This year, more books by women were reviewed. Yet, they may also disguise the real site of struggle.",
+      "Stories tell us what it is to be human, giving us a context for the past and an insight towards the future. Paradoxically, we think we are escaping ourselves but the best stories take us back deeper into our interior worlds. It is difficult to access emotional language and this is why we have writers. They remind us of the universality and timelessness of emotions, helping us better understand our own.",
+      "What stories have shaped you? It’s a question worth reflecting on, as this shaping is often subconscious. The act of making it conscious will allow your future reading to perhaps have a different effect; you will be “reading” your life from now on, allowing you to live it more fully and understand it better. Reading improves our mental health.",
+      "Sometimes it is not the content of the stories themselves but just knowing you have control by choosing to read or listen that provides the calming effect. All stories offer a safe, calm world with a beginning, middle, and end. We have the power to start or stop and choose how long we stay in the story’s world.",
+      "Why are so many new words and phrases emerging from the Internet, and why is it happening at such an accelerated pace? Actually, the Internet isn't the only technological phenomenon that's changed the way we talk. Radio, television, and telephone have contributed their fair share of new words and phrases to our lexicon over the last century.",
+      "Dictionaries are fantastic resources, but they are a reflection of humanity and they are not timeless. If you ask dictionary editors, what they’ll tell you is that they’re just trying to keep up with us as we change the language. They’re watching what we say and what we write and trying to figure out what’s going to stick and what isn’t.",
+      "We reached out to three food historians and asked them to tell the story of a sandwich of their choosing. Together, they show the sandwiches we eat (or used to eat) do more than fill us up during our lunch breaks. In their stories are themes of class and gender, of resourcefulness and creativity, and of immigration and globalization.",
+      "During my first year of college I found two campus canteens that use organic, locally grown produce in their meals, and one that consistently uses free-range meat. For the most part, these vendors didn’t widely advertise the fact that they were participating in the local food economy. I only found out because I cared, and then tried to buy most of my food from those places.",
+      "In today’s crowded, louder, more fast-paced world, night’s darkness can provide solitude and quietness, qualities increasingly in short supply. Darkness has always been considered invaluable for a soulful life, and the chance to witness the universe in the dark has inspired artists and philosophers since time began. In a world flooded with artificial light, how would Vincent van Gogh have given the world his Starry night?",
+      "Even as they’ve become endangered in the wild, Atlantic salmon have however thrived in open-ocean net pens, giving me an advantage in the fish-farming business. Tuna and cod, by contrast, have been successfully farmed only recently and with difficulty. As a result, I’ve become the second-most-popular seafood in the United States, with 70 percent of the salmon that Americans eat coming from the farms along sheltered coasts.",
+      "Of all forms of art, music is most likely to be influenced by Big Data analysis, because both inputs and outputs can be analyzed by algorithms. The inputs are the mathematical patterns of sound waves, and the outputs are how the brain and body react. Within a few decades, an algorithm that goes over millions of musical experiences might learn to predict how particular inputs result in particular outputs.",
+      "Evolutionary psychologists remind us that at our core, virtually everything we do emerges from a subconscious urge to survive and reproduce our genes, or lend support to others, such as family, who carry genes like our own. They further suggest that many of the physical traits that we consider attractive are signs of physical health and fitness-in other words, good genes.",
+      "I studied a lot in college, too. I had moments of panic while sitting underneath the buzzing lights in the engineering library, when I worried that the estrogen in my body was preventing me from understanding thermodynamics. But the guys in my classes had to work just as hard, and I knew that I couldn’t afford to lose confidence in myself. I didn’t want to choose between my femininity and a good career. So, I reminded myself that you can judge a person’s abilities separate from the cultural cues that she has received since she was an infant. No man is an island. No woman is, either.",
+      "Many foreign friends first learn about Chinese culture through the numerous Chinese restaurants found all over the world, and soon discern that China is a country with delicious cuisine. The second impression of Chinese culture is often Peking Opera, whose masks are now almost emblematic of China. Many countries design posters using Peking Opera masks to signal a “Year of Chinese Culture”.",
+      "According to ancient Chinese culture, rituals provided the norms of conduct for people. The goal was to maintain social order. Music was for the mind’s cultivation and expression. Its purpose was to enhance people’s outlook on life and imbue them with energy and creativity, such that they could enjoy a more harmonious and happier spiritual life.",
+      "On the back cover of their final issue was a photograph of an early morning country road, the kind you might find yourself hitchhiking on if you were so adventurous. Beneath it were the words: “Stay Hungry. Stay Foolish.” It was their farewell message as they signed off. Stay Hungry. Stay Foolish. And I’ve always wished that for myself. And now, as you graduate to begin anew, I wish that for you.",
+      "Since the 18th CPC National Congress in 2012, we have committed ourselves to comprehensive moves to complete a moderately prosperous society in all respects, further reform, advance the rule of law, and strengthen Party discipline. This Four-pronged Strategy tackles the major problems currently affecting the Party and the country.",
+      "Through the continued efforts of the whole Party and the entire nation, we have realized the first centenary goal of building a moderately prosperous society in all respects. This means that we have brought about a historic resolution to the problem of absolute poverty in China, and we are now marching in confident strides towards the second centenary goal of building China into a great modern socialist country in all respects.",
+      "Officials at all levels should plan and promote reform consciously from an overall perspective, seek truth from fact, be pragmatic, make sure that we start well and end well, and work wholeheartedly to produce the best possible results. They should also keep to the right direction, be ready to take on responsibilities, be personally involved and focus on implementations.",
+      "We should strengthen the enforcement of the Constitution and the law, and uphold the unity, dignity and authority of the socialist legal system, so that people neither want, nor are able, nor dare to break the law. We will make sure that laws are abided by and strictly enforced, and lawbreakers are prosecuted.",
+      "Some Party members and officials consider that they are the ones in charge. Convinced that they should have the final say in everything, they are totally oblivious to the existence of the law, and are bent on overriding it with their authority at every turn. Not until this practice ends will we stand a chance of genuinely realizing the rule of law.",
+      "We need to motivate the public to actively involve themselves in the practice of the rule of law, enable the people as a whole to become devoted advocates, conscientious observers and resolute defenders of socialist rule of law; and ensure that all share a common aspiration to respect the law, trust the law, observe the law, apply the law and defend the law.",
+      "The key to our supply-side structural reform is to release and develop productive forces, to adjust structures through reform, to reduce ineffective and lower-end supply while increasing effective and medium-and high-end supply, to make supply structure more adaptive and flexible to changes in demand, and to increase total factor productivity.",
+      "To pursue innovative, coordinated, green, open and inclusive development is a profound reform bearing on the overall development of our country. Each of these five concepts is essential on an individual level. Together they are interconnected, forming one integrated whole that must be implemented in unison and with equal attention.",
+      "The Central Committee determined that China’s economy had reached a new normal of development and was transitioning from a stage of high-speed growth to a stage of high-quality development. Our traditional growth model could no longer be sustained in the face of this complex situation in which we had to deal with a slowdown in economic growth, make painful structural adjustments, and absorb the effects of previous economic stimulus policies.",
+      "We will educate our officers and soldiers to intensify their ability to respond to adversity and crisis, so that their commitment will remain firm, their work determined, their morale high and their discipline unwavering. Our officers and soldiers will maintain an indomitable revolutionary spirit and be dauntless in combat."
+    ];
+
+    let countdownInterval;
+
+    function startReading() {
+      // 清除上次计时
+      clearInterval(countdownInterval);
+      // 随机选一段
+      const passage = passages[Math.floor(Math.random() * passages.length)];
+      document.getElementById('passage').innerText = passage;
+      let timeLeft = 30;
+      document.getElementById('timer').innerText = timeLeft;
+
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById('timer').innerText = '⏰ 时间到！';
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
